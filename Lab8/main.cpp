@@ -16,8 +16,6 @@ struct detail {
     detail* prev;
 };
 
-bool compare (detail *item, int id, char *name, int amount); //сверяет данный элемент со значениями в команде
-
 int main() {
     detail *first, *last;
     first = nullptr;
