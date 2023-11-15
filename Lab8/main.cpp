@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstring>
 
-static char input[100];
-static char commands[5][100];
+static char input[100]; //введённая пользователем строка
+static char commands[5][100]; //строка, разбитая по отдельным командам
 
 short input_command (char input[100], char commands[5][100]); //0-add; 1-delete; 2-incorrect input; 3-print; 4-exit
 
@@ -28,7 +28,7 @@ int main() {
          "To print a list of items, type: Print\n"
          "To exit, type: Exit");
     short input_code = input_command(input, commands);
-    while (input_code!=4) {
+    while (input_code!=4) { //работает пока не будет получена команда выхода
         switch (input_code) {
         case 0: //add
             detail *item;
@@ -38,8 +38,8 @@ int main() {
             item->amount = atoi(commands[3]);
             item->next=nullptr;
             item->prev=nullptr;
-            if (first==nullptr) {first=item; last=item;}
-            else {last->next=item; item->prev=last; last=item;}
+            if (first==nullptr) {first=item; last=item;} //если элементов нет, то создает первый
+            else {last->next=item; item->prev=last; last=item;} //если элементы есть, то добавляет в конец
             puts("Added");
             break;
         case 1: //delete
@@ -55,8 +55,9 @@ int main() {
             else { //удалить элемент внутри
                 detail *current_item=first; detail *next_item = current_item->next;
                 while (next_item!=nullptr and next_item->id==atoi(commands[1]) and strcmp(next_item->name, commands[2])!=0 and next_item->amount==atoi(commands[3])) current_item=current_item->next; next_item=next_item->next;
-                if (next_item==nullptr) puts("No such item in the list. Try again:");
-                else {current_item->next=next_item->next; delete next_item; puts("Deleted");}
+                if (next_item==nullptr) puts("No such item in the list. Try again:"); //если элемент не был найден, то ошибка
+                else { //если найден, то удаляет его
+                    current_item->next=next_item->next; delete next_item; puts("Deleted");}
             }
             break;
         case 2: //incorrect input
@@ -82,27 +83,27 @@ bool isnumber (char* string) {
 }
 
 short input_command (char input[100], char commands[5][100]) {
-    for (int i=0; i<5; i++) commands[i][0]='\0';
+    for (int i=0; i<5; i++) commands[i][0]='\0'; //костыль, чтобы "очистить" команды
     gets(input);
-    char* token = strtok(input, " ");
+    char* token = strtok(input, " "); //берёт слово до пробела
     int i=0;
     while (token!=nullptr) {
         strcpy(commands[i], token);
         if (i==4) return 2;
-        token = strtok(nullptr, " "); i++;
+        token = strtok(nullptr, " "); i++; //не знаю, почему nullptr, но оно работает :)
     }
     if (strcmp(commands[0], "Add")==0) {
-        if (isnumber(commands[1]) and isnumber(commands[3])) return 0;
+        if (isnumber(commands[1]) and isnumber(commands[3])) return 0; //проверяет, что команда Add введена проавильно
         else return 2;
     } else if (strcmp(commands[0], "Delete")==0) {
-        if (isnumber(commands[1]) and isnumber(commands[3])) return 1;
+        if (isnumber(commands[1]) and isnumber(commands[3])) return 1; //проверяет, что команда Delete введена проавильно
         else return 2;
-    } else if (strcmp(commands[0], "Print")==0) {
+    } else if (strcmp(commands[0], "Print")==0) { //проверяет, что команда Print введена проавильно
         if (commands[1][0]=='\0') return 3;
         else return 2;
-    } else if (strcmp(commands[0], "Exit")==0) {
+    } else if (strcmp(commands[0], "Exit")==0) { //проверяет, что команда Exit введена проавильно
         if (commands[1][0]=='\0') return 4;
         else return 2;
     }
-    return 2;
+    return 2; //Во всех неподходящих случаях возвращает "Incorrect input"
 }
