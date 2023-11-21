@@ -35,9 +35,8 @@ int main() {
             strcpy(item->name, commands[2]);
             item->amount = atoi(commands[3]);
             item->next=nullptr;
-            item->prev=nullptr;
             if (first==nullptr) {first=item; last=item;} //если элементов нет, то создает первый
-            else {last->next=item; item->prev=last; last=item;} //если элементы есть, то добавляет в конец
+            else {last->next=item; last=item;} //если элементы есть, то добавляет в конец
             puts("Added");
             break;
         case 1: //delete
