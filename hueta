@@ -1,0 +1,48 @@
+#include <iostream> //!!! это говнокод, его можно оптимизировать, но мне впадлу очень!!!
+#include <cstring>
+
+struct stack {
+    stack *next;
+    char* word;
+};
+
+void add();
+
+stack *first=nullptr; //стек
+char *word=nullptr; //динамический массив для каждого отдельного слова
+
+int main() {
+    char ch;
+    int current_i=0;
+    puts("Input:");
+    ch=getchar();
+    while (ch!='\n') {
+        if (ch!=' ') { //добавляет символ в массив word
+            current_i++;
+            word=(char *) realloc(word, current_i*sizeof(char));
+            word[current_i-1]=ch;
+        }
+        else {
+            current_i=0;
+            add();
+        }
+        ch=getchar();
+    }
+    if (word!=nullptr) add();
+    stack *item=first;
+    while (item!=nullptr) {
+        printf("%s\n", item->word);
+        item=item->next;
+    }
+}
+
+void add() { //добавляет слово из word в стек и очищает word
+    stack *item;
+    item=(stack*) malloc(sizeof(stack));
+    item->word=(char*) malloc(sizeof(word));
+    strcpy(item->word, word);
+    item->next=first;
+    free(word);
+    word=nullptr;
+    first=item;
+}
